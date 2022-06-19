@@ -28,7 +28,7 @@ public class SignUpTest {
         System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
         WebDriver driver = new ChromeDriver();
         driver.get("https://www.sharelane.com/cgi-bin/register.py");
-        driver.findElement(By.name("zip_code")).sendKeys("123");
+        driver.findElement(By.name("zip_code")).sendKeys("12356789");
         driver.findElement(By.cssSelector("input[value='Continue']")).click();
         WebElement message = driver.findElement(By.cssSelector(".error_message"));
         Assert.assertTrue(message.isDisplayed(), "zip code не содержит 5 цифр");
