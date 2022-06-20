@@ -5,17 +5,29 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.Objects;
 
 public class SignUpTest {
 
-    @Test
-    public void zipCodeShouldBeValid() {
+    WebDriver driver;
+
+    @BeforeClass
+    public void setPathVariable() {
         System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
+    }
+
+    @BeforeMethod
+    public void setUp() {
         WebDriver driver = new ChromeDriver();
         driver.get("https://www.sharelane.com/cgi-bin/register.py");
+    }
+
+    @Test
+    public void zipCodeShouldBeValid() {
         driver.findElement(By.name("zip_code")).sendKeys("12345");
         driver.findElement(By.cssSelector("input[value='Continue']")).click();
         WebElement registerButton = driver.findElement(By.cssSelector("input[value='Register']"));
@@ -24,10 +36,7 @@ public class SignUpTest {
 
     // zip code должен содержать 5 цифр
     @Test
-    public void zipCodeShouldHaveFiveDigits() {
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://www.sharelane.com/cgi-bin/register.py");
+    public void userShouldNotBeRegisteredIfZipCodeMoreThanFiveDigits() {
         driver.findElement(By.name("zip_code")).sendKeys("12356789");
         driver.findElement(By.cssSelector("input[value='Continue']")).click();
         WebElement message = driver.findElement(By.cssSelector(".error_message"));
@@ -37,9 +46,6 @@ public class SignUpTest {
     // проверка успешной регистрации при валидных данных
     @Test
     public void signUpDataIsValid() {
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://www.sharelane.com/cgi-bin/register.py");
         driver.findElement(By.name("zip_code")).sendKeys("12345");
         driver.findElement(By.cssSelector("input[value='Continue']")).click();
         driver.findElement(By.name("first_name")).sendKeys("Alex");
@@ -54,9 +60,6 @@ public class SignUpTest {
     // проверка на то, что поле First Name является обязательным
     @Test
     public void fieldFirstNameIsRequired() {
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://www.sharelane.com/cgi-bin/register.py");
         driver.findElement(By.name("zip_code")).sendKeys("12345");
         driver.findElement(By.cssSelector("input[value='Continue']")).click();
         driver.findElement(By.name("email")).sendKeys("alex@mail.ru");
@@ -70,9 +73,6 @@ public class SignUpTest {
     // проверка на то, что поле Email является обязательным
     @Test
     public void fieldEmailIsRequired() {
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://www.sharelane.com/cgi-bin/register.py");
         driver.findElement(By.name("zip_code")).sendKeys("12345");
         driver.findElement(By.cssSelector("input[value='Continue']")).click();
         driver.findElement(By.name("first_name")).sendKeys("Alex");
@@ -86,9 +86,6 @@ public class SignUpTest {
     // проверка на то, что поле Password является обязательным
     @Test
     public void fieldPasswordIsRequired() {
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://www.sharelane.com/cgi-bin/register.py");
         driver.findElement(By.name("zip_code")).sendKeys("12345");
         driver.findElement(By.cssSelector("input[value='Continue']")).click();
         driver.findElement(By.name("first_name")).sendKeys("Alex");
@@ -102,9 +99,6 @@ public class SignUpTest {
     // проверка на то, что поле Confirm Password является обязательным
     @Test
     public void fieldConfirmPasswordIsRequired() {
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://www.sharelane.com/cgi-bin/register.py");
         driver.findElement(By.name("zip_code")).sendKeys("12345");
         driver.findElement(By.cssSelector("input[value='Continue']")).click();
         driver.findElement(By.name("first_name")).sendKeys("Alex");
@@ -118,9 +112,6 @@ public class SignUpTest {
     // проверка на совпадение паролей
     @Test
     public void equalsPassword() {
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://www.sharelane.com/cgi-bin/register.py");
         driver.findElement(By.name("zip_code")).sendKeys("12345");
         driver.findElement(By.cssSelector("input[value='Continue']")).click();
         driver.findElement(By.name("first_name")).sendKeys("Alex");
@@ -131,34 +122,30 @@ public class SignUpTest {
         WebElement message = driver.findElement(By.cssSelector(".error_message"));
         Assert.assertTrue(message.isDisplayed(), "Пароли не совпадают");
     }
-// проверка на скрытие пароля ("*") в поле Password
+
+    // проверка на скрытие пароля ("*") в поле Password
     @Test
     public void passwordIsHidden() {
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://www.sharelane.com/cgi-bin/register.py");
         driver.findElement(By.name("zip_code")).sendKeys("12345");
         driver.findElement(By.cssSelector("input[value='Continue']")).click();
         driver.findElement(By.name("first_name")).sendKeys("Alex");
         driver.findElement(By.name("email")).sendKeys("alex@mail.ru");
         driver.findElement(By.name("password1")).sendKeys("123456789Zz");
         driver.findElement(By.name("password2")).sendKeys("123456789Zz");
-        WebElement password=driver.findElement(By.name("password1"));
+        WebElement password = driver.findElement(By.name("password1"));
         Assert.assertEquals(password.getAttribute("type"), "password");
     }
+
     // проверка на скрытие пароля ("*") в поле Confirm Password
     @Test
     public void confirmPasswordIsHidden() {
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://www.sharelane.com/cgi-bin/register.py");
         driver.findElement(By.name("zip_code")).sendKeys("12345");
         driver.findElement(By.cssSelector("input[value='Continue']")).click();
         driver.findElement(By.name("first_name")).sendKeys("Alex");
         driver.findElement(By.name("email")).sendKeys("alex@mail.ru");
         driver.findElement(By.name("password1")).sendKeys("123456789Zz");
         driver.findElement(By.name("password2")).sendKeys("123456789Zz");
-        WebElement password=driver.findElement(By.name("password2"));
+        WebElement password = driver.findElement(By.name("password2"));
         Assert.assertEquals(password.getAttribute("type"), "password");
     }
 }
