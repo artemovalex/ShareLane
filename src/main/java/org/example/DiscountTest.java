@@ -17,21 +17,9 @@ import org.testng.annotations.Test;
 //           # 1000 - 4999  | 6
 //           # 5000 - 9999  | 7
 //           # 10000 and more | 8
-public class DiscountTest {
-    WebDriver driver;
+public class DiscountTest extends BaseTest {
     String email;
     String password;
-
-    @BeforeClass
-    public void setPathToWebDriver() {
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
-    }
-
-    @BeforeMethod
-    public void setUp() {
-        driver = new ChromeDriver();
-        driver.get("https://www.sharelane.com/cgi-bin/register.py");
-    }
 
     public void login() {
         driver.findElement(By.name("zip_code")).sendKeys("12345");
@@ -145,8 +133,4 @@ public class DiscountTest {
         Assert.assertTrue(discount.isDisplayed(), "discount,% рассчитан неверно");
     }
 
-    @AfterMethod(alwaysRun = true)
-    public void tearDown() {
-        driver.quit();
-    }
 }
